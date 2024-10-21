@@ -1,0 +1,40 @@
+name: e_commerce
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Cupertino Icons for iOS style icons
+  cupertino_icons: ^1.0.8
+
+  # SQLite for local database
+  sqflite: ^2.0.0+4
+  
+  # Lints for Flutter project
+  flutter_lints: ^4.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  # Enable Material design icons
+  uses-material-design: true
+
+  # You can add assets or fonts here as needed.
+  # Example:
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg
+  #
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
