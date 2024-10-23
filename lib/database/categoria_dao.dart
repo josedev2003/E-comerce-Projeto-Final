@@ -1,30 +1,34 @@
-
 import 'package:sqflite/sqflite.dart';
-
 import 'database_helper.dart';
 import '../models/categoria.dart';
 
 class CategoriaDAO {
+  Future<void> insertCategoria(Categoria categoria) async {
+    final db = await DatabaseHelper().db;
+    // Insira a categoria somente se não existir
+    List<Map<String, dynamic>> existingCategorias = await db.query(
+      'categoria',
+      where: 'nome = ?',
+      whereArgs: [categoria.nome],
+    );
 
-Future<void> insertCategoria(Categoria categoria) async {
-  final db = await DatabaseHelper().db;
-  await db.insert(
-    'categoria',
-    categoria.toMap(), // Certifique-se de que você tenha um método toMap na classe Categoria.
-    conflictAlgorithm: ConflictAlgorithm.replace,
-  );
-}
-
-  Future<List<Categoria>> getCategorias() async {
-    final db = await DatabaseHelper().db; // Verifique se o banco de dados está aberto corretamente.
-    final List<Map<String, dynamic>> result = await db.query('categoria');
-
-    // ignore: avoid_print
-    print('Resultado da consulta: $result'); 
-
-    return result.map((map) => Categoria.fromMap(map)).toList(); // Verifique se `fromMap` está implementado corretamente.
+    if (existingCategorias.isEmpty) {
+      await db.insert(
+        'categoria',
+        categoria.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
   }
 
+  Future<List<Categoria>> getCategorias() async {
+    final db = await DatabaseHelper().db;
+    final List<Map<String, dynamic>> result = await db.query('categoria');
+
+    print('Resultado da consulta: $result');
+
+    return result.map((map) => Categoria.fromMap(map)).toList();
+  }
 
   Future<int> updateCategoria(Categoria categoria) async {
     final db = await DatabaseHelper().db;

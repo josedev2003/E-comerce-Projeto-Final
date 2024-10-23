@@ -1,4 +1,5 @@
 import 'package:e_commerce/database/database_helper.dart';
+import 'package:e_commerce/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const HomeScreen(),
+      home:  OnboardingScreen(),
     );
   }
 }

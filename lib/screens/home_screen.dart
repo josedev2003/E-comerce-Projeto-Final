@@ -7,7 +7,7 @@ import 'produto_screen.dart';
 import 'carrinho_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required List<String> categorias});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();

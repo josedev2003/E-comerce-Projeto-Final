@@ -30,3 +30,7 @@ dependencies:
 dev_dependencies:
   flutter_lints: ^5.0.0
   lints: ^5.0.0
+
+flutter:
+  assets:
+    - assets/images/ # Caminho da pasta onde estão suas imagens
