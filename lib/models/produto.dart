@@ -1,26 +1,29 @@
-// lib/models/produto.dart
-import 'package:e_commerce/models/categorias.dart';
-
 class Produto {
-  int id;
+  int? id;
   String nome;
   String descricao;
   double preco;
-  Categoria categoria;  // Relacionamento com a Categoria
+  int categoriaId;
 
-  Produto({
-    required this.id,
-    required this.nome,
-    required this.descricao,
-    required this.preco,
-    required this.categoria,
-  });
+  Produto({this.id, required this.nome, required this.descricao, required this.preco, required this.categoriaId});
 
-  void atualizarProduto(Produto dados) {
-    // Atualiza os atributos do produto com base nos dados recebidos
-    nome = dados.nome;
-    descricao = dados.descricao;
-    preco = dados.preco;
-    categoria = dados.categoria;
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'nome': nome,
+      'descricao': descricao,
+      'preco': preco,
+      'categoria_id': categoriaId,
+    };
+  }
+
+  static Produto fromMap(Map<String, dynamic> map) {
+    return Produto(
+      id: map['id'],
+      nome: map['nome'],
+      descricao: map['descricao'],
+      preco: map['preco'],
+      categoriaId: map['categoria_id'],
+    );
   }
 }

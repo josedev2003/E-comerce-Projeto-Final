@@ -1,9 +1,15 @@
-// lib/main.dart
-
+import 'package:e_commerce/database/database_helper.dart';
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+    await DatabaseHelper().dropDatabase();
+
+  // Obtenha a instância do banco de dados
+  final db = await DatabaseHelper().db;
+
   runApp(const MyApp());
 }
 

@@ -1,0 +1,20 @@
+PS C:\E-comerce-Projeto-Final> adb shell 
+generic_x86_arm:/ $ run-as com.example.e_commerce
+generic_x86_arm:/data/user/0/com.example.e_commerce $ cd databases
+generic_x86_arm:/data/user/0/com.example.e_commerce/databases $ ls
+ecommerce.db  ecommerce.db-journal  modgeek.db  modgeek.db-journal
+qlite3 modgeek.db                                                                 <
+SQLite version 3.28.0 2020-05-06 18:46:38
+Enter ".help" for usage hints.
+sqlite> .tables
+android_metadata  cliente           pagamento       
+carrinho          estoque           pedidos
+categoria         item_carrinho     produto
+sqlite>       
+
+sqlite> SELECT * FROM produto; 
+1|Tênis Esportivo|Super tênis de corrida|150.0|2
+2|Tênis Esportivo|Super tênis de corrida|150.0|2
+3|Tênis Esportivo|Super tênis de corrida|150.0|2
+4|Tênis Casual|Tênis confortável para o dia a dia|120.0|3
+sqlite>       
