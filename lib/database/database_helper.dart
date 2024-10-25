@@ -2,29 +2,26 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-  // Singleton instance
   static final DatabaseHelper _instance = DatabaseHelper._internal();
   factory DatabaseHelper() => _instance;
 
-  static Database? _db;
-
-  // Getter para o banco de dados
-  Future<Database> get db async {
-    if (_db != null) return _db!;
-    _db = await _initDb();
-    return _db!;
-  }
+  static Database? _database;
 
   DatabaseHelper._internal();
 
-  // Inicializa o banco de dados
-  Future<Database> _initDb() async {
-    String path = join(await getDatabasesPath(), "modgeek.db");
+  Future<Database> get db async {
+    if (_database != null) return _database!;
+    _database = await _initDatabase();
+    return _database!;
+  }
+
+  Future<Database> _initDatabase() async {
+    String path = join(await getDatabasesPath(), 'ecommerce.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: 2, // Aumente a versão aqui
       onCreate: _onCreate,
-      onUpgrade: _onUpgrade, // Adiciona um método para upgrade se necessário
+      onUpgrade: _onUpgrade, // Adicione este método para gerenciar a atualização
     );
   }
 
@@ -48,80 +45,29 @@ class DatabaseHelper {
       );
     ''');
 
-    await db.execute('''
-      CREATE TABLE estoque (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        produto_id INTEGER,
-        quantidade INTEGER,
-        FOREIGN KEY(produto_id) REFERENCES produto(id)
-      );
-    ''');
+    // Insere dados iniciais
+    await db.insert('categoria', {'nome': 'Chuteiras'});
+    await db.insert('categoria', {'nome': 'Tênis de Futsal'});
+    await db.insert('categoria', {'nome': 'Acessórios'});
 
-    await db.execute('''
-      CREATE TABLE cliente (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        nome TEXT,
-        cpf TEXT,
-        endereco TEXT,
-        email TEXT
-      );
-    ''');
-
-    await db.execute('''
-      CREATE TABLE carrinho (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        cliente_id INTEGER,
-        total REAL,
-        FOREIGN KEY(cliente_id) REFERENCES cliente(id)
-      );
-    ''');
-
-    await db.execute('''
-      CREATE TABLE item_carrinho (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        produto_id INTEGER,
-        carrinho_id INTEGER,
-        quantidade INTEGER,
-        preco_total REAL,
-        FOREIGN KEY(produto_id) REFERENCES produto(id),
-        FOREIGN KEY(carrinho_id) REFERENCES carrinho(id)
-      );
-    ''');
-
-    await db.execute('''
-      CREATE TABLE pedidos (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        cliente_id INTEGER,
-        carrinho_id INTEGER,
-        status TEXT,
-        FOREIGN KEY(cliente_id) REFERENCES cliente(id),
-        FOREIGN KEY(carrinho_id) REFERENCES carrinho(id)
-      );
-    ''');
-
-    await db.execute('''
-      CREATE TABLE pagamento (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        tipo TEXT,
-        status TEXT,
-        pedido_id INTEGER,
-        FOREIGN KEY(pedido_id) REFERENCES pedidos(id)
-      );
-    ''');
-
+    await db.insert('produto', {'nome': 'Tênis Esportivo', 'descricao': 'Super tênis de corrida', 'preco': 150.00, 'categoria_id': 1});
+    await db.insert('produto', {'nome': 'Tênis Casual', 'descricao': 'Tênis confortável para o dia a dia', 'preco': 120.00, 'categoria_id': 2});
+    await db.insert('produto', {'nome': 'Bota de Aventura', 'descricao': 'Bota resistente para trilhas', 'preco': 300.00, 'categoria_id': 3});
   }
 
-  // Método para atualizar o banco de dados se necessário
+  // Método para atualizar o banco de dados
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    // Adicione lógica de upgrade aqui, se necessário
+    // Exclui tabelas existentes
+    await db.execute('DROP TABLE IF EXISTS produto');
+    await db.execute('DROP TABLE IF EXISTS categoria');
+    
+    // Cria as tabelas novamente
+    await _onCreate(db, newVersion);
   }
 
-  // Função para excluir o banco de dados
-  // Função para excluir o banco de dados
+  // Método para excluir o banco de dados
   Future<void> dropDatabase() async {
-    String path = join(await getDatabasesPath(), 'modgeek.db');
+    String path = join(await getDatabasesPath(), 'ecommerce.db');
     await deleteDatabase(path); // Exclui o banco de dados
   }
 }
-
-

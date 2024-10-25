@@ -16,6 +16,7 @@ class ProdutoScreen extends StatefulWidget {
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _ProdutoScreenState createState() => _ProdutoScreenState();
 }
 
@@ -52,10 +53,12 @@ class _ProdutoScreenState extends State<ProdutoScreen> {
                   await ProdutoDAO().insertProduto(widget.produto); // Use a instância do singleton
                   // Adicione o produto ao carrinho
                   widget.adicionarCarrinho(widget.produto);
+                  // ignore: use_build_context_synchronously
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('${widget.produto.nome} adicionado ao banco de dados e ao carrinho!')),
                   );
                 } catch (e) {
+                  // ignore: use_build_context_synchronously
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Erro ao adicionar ${widget.produto.nome}: $e')),
                   );

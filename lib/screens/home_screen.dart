@@ -1,5 +1,6 @@
 // Importa a classe Categoria para gerenciar categorias de produtos.
 import 'package:e_commerce/database/categoria_dao.dart';
+import 'package:e_commerce/database/produto_dao.dart';
 import 'package:flutter/material.dart';
 import '../models/produto.dart';
 import '../models/categoria.dart'; // Importa a classe Categoria. // Importa o DAO de Categoria.
@@ -10,69 +11,67 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required List<String> categorias});
 
   @override
+  // ignore: library_private_types_in_public_api
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<Produto> produtos = [
-    Produto(
-      id: null,
-      nome: "Tênis Esportivo",
-      descricao: "Super tênis de corrida",
-      preco: 150.00,
-      categoriaId: 1, // Verifique se o ID aqui corresponde à categoria.
-    ),
-    Produto(
-      id: null,
-      nome: "Tênis Casual",
-      descricao: "Tênis confortável para o dia a dia",
-      preco: 120.00,
-      categoriaId: 2,
-    ),
-    Produto(
-      id: null,
-      nome: "Bota de Aventura",
-      descricao: "Bota resistente para trilhas",
-      preco: 300.00,
-      categoriaId: 3,
-    ),
-  ];
-
-  List<Categoria> categorias =[]; // Lista para armazenar categorias do banco de dados.
+  List<Produto> produtos = []; // Lista para armazenar produtos do banco de dados
+  List<Categoria> categorias = []; // Lista para armazenar categorias do banco de dados.
   int categoriaSelecionadaId = 0; // ID da categoria selecionada, inicializa como "Todos".
   String categoriaSelecionada = 'Todos';
   List<Produto> carrinho = [];
 
-Future<void> _carregarCategorias() async {
-  try {
-    categorias = await CategoriaDAO().getCategorias();
+  Future<void> _carregarProdutos() async {
+    try {
+      produtos = await ProdutoDAO().getProdutos(); // Carrega produtos do banco de dados
 
-    // Verifique se as categorias foram carregadas
-    if (categorias.isNotEmpty) {
-      print('Categorias carregadas: ${categorias.map((c) => c.nome).toList()}');
-    } else {
-      print('Nenhuma categoria encontrada.');
+      // Verifique se os produtos foram carregados
+      if (produtos.isNotEmpty) {
+        // ignore: avoid_print
+        print('Produtos carregados: ${produtos.map((p) => p.nome).toList()}');
+      } else {
+        // ignore: avoid_print
+        print('Nenhum produto encontrado.');
+      }
+
+      // Atualiza o estado para refletir os produtos carregados.
+      setState(() {});
+    } catch (e) {
+      // Exibe um erro no console se houver problemas ao carregar produtos.
+      // ignore: avoid_print
+      print('Erro ao carregar produtos: $e');
     }
-
-    // Atualiza o estado para refletir as categorias carregadas.
-    setState(() {});
-  } catch (e) {
-    // Exibe um erro no console se houver problemas ao carregar categorias.
-    print('Erro ao carregar categorias: $e');
   }
-}
 
-Future<void> _inserirDados() async {
-  await CategoriaDAO().insertCategoria(Categoria(nome: 'Categoria 1'));
-  await CategoriaDAO().insertCategoria(Categoria(nome: 'Categoria 2'));
-}
+  Future<void> _carregarCategorias() async {
+    try {
+      categorias = await CategoriaDAO().getCategorias();
+
+      // Verifique se as categorias foram carregadas
+      if (categorias.isNotEmpty) {
+        // ignore: avoid_print
+        print('Categorias carregadas: ${categorias.map((c) => c.nome).toList()}');
+      } else {
+        // ignore: avoid_print
+        print('Nenhuma categoria encontrada.');
+      }
+
+      // Atualiza o estado para refletir as categorias carregadas.
+      setState(() {});
+    } catch (e) {
+      // Exibe um erro no console se houver problemas ao carregar categorias.
+      // ignore: avoid_print
+      print('Erro ao carregar categorias: $e');
+    }
+  }
 
   @override
   void initState() {
-  super.initState();
-  _inserirDados(); // Método para inserir dados para teste
-  _carregarCategorias(); // Carrega as categorias ao iniciar o widget.
-}
+    super.initState();
+    _carregarCategorias(); // Carrega as categorias ao iniciar o widget.
+    _carregarProdutos(); // Carrega os produtos ao iniciar o widget.
+  }
 
   void adicionarCarrinho(Produto produto) {
     setState(() {
@@ -84,11 +83,10 @@ Future<void> _inserirDados() async {
   Widget build(BuildContext context) {
     List<Produto> produtosFiltrados = categoriaSelecionadaId == 0
         ? produtos
-        : produtos
-            .where((produto) => produto.categoriaId == categoriaSelecionadaId)
-            .toList();
+        : produtos.where((produto) => produto.categoriaId == categoriaSelecionadaId).toList();
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
@@ -120,18 +118,17 @@ Future<void> _inserirDados() async {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: categorias.isEmpty
-                ? CircularProgressIndicator() // Mostra um carregando se as categorias não estiverem carregadas.
+                ? const CircularProgressIndicator() // Mostra um carregando se as categorias não estiverem carregadas.
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: categorias.map((categoria) {
                       return ChoiceChip(
                         label: Text(categoria.nome),
-                        selected: categoria.nome == categoriaSelecionada,
+                        selected: categoria.id == categoriaSelecionadaId,
                         onSelected: (selected) {
                           setState(() {
                             categoriaSelecionada = categoria.nome;
-                            categoriaSelecionadaId = categoria
-                                .id!; // Atualiza o ID da categoria selecionada.
+                            categoriaSelecionadaId = categoria.id!; // Atualiza o ID da categoria selecionada.
                           });
                         },
                       );

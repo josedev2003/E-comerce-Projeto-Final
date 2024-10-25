@@ -33,4 +33,11 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/images/ # Caminho da pasta onde estão suas imagens
+    - assets/images/  # Caminho da pasta onde estão suas imagens
+  fonts:
+    - family: Mate SC
+      fonts: 
+        - asset: assets/fonts/MateSC-Regular.ttf  # Correção na propriedade 'asset'
+    - family : Prata
+      fonts: 
+        - asset: assets/fonts/Prata-Regular.ttf 
