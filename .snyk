@@ -1,0 +1,6 @@
+version: v1.0
+policy:
+  ignore:
+    - id: 'SNYK-DART-XXXX'
+      reason: 'Ignorando esta vulnerabilidade por motivos de teste'
+      until: '2024-12-31'

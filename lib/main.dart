@@ -1,11 +1,14 @@
 import 'package:e_commerce/database/database_helper.dart';
-import 'package:e_commerce/screens/onboarding_screen.dart';
+import 'package:e_commerce/screens/loginpage_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DatabaseHelper().db; // Inicializa o banco e insere dados iniciais
-  runApp(const MyApp());
+
+  // Apenas inicializar o banco de dados sem excluir
+  await DatabaseHelper().db; // Garante a inicialização e atualização do banco
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +23,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         scaffoldBackgroundColor: Colors.transparent,
       ),
-      home: OnboardingScreen(),
+      home: LoginScreen(),
     );
   }
 }

@@ -1,9 +1,9 @@
-// Importa a classe Categoria para gerenciar categorias de produtos.
+import 'package:e_commerce/components/buttom_navigation_bar.dart';
 import 'package:e_commerce/database/categoria_dao.dart';
 import 'package:e_commerce/database/produto_dao.dart';
 import 'package:flutter/material.dart';
 import '../models/produto.dart';
-import '../models/categoria.dart'; // Importa a classe Categoria. // Importa o DAO de Categoria.
+import '../models/categoria.dart';
 import 'produto_screen.dart';
 import 'carrinho_screen.dart';
 
@@ -11,35 +11,22 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required List<String> categorias});
 
   @override
-  // ignore: library_private_types_in_public_api
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Produto> produtos = []; // Lista para armazenar produtos do banco de dados
-  List<Categoria> categorias = []; // Lista para armazenar categorias do banco de dados.
-  int categoriaSelecionadaId = 0; // ID da categoria selecionada, inicializa como "Todos".
+  List<Produto> produtos = [];
+  List<Categoria> categorias = [];
+  int categoriaSelecionadaId = 0;
   String categoriaSelecionada = 'Todos';
   List<Produto> carrinho = [];
+  int _selectedIndex = 0;
 
   Future<void> _carregarProdutos() async {
     try {
-      produtos = await ProdutoDAO().getProdutos(); // Carrega produtos do banco de dados
-
-      // Verifique se os produtos foram carregados
-      if (produtos.isNotEmpty) {
-        // ignore: avoid_print
-        print('Produtos carregados: ${produtos.map((p) => p.nome).toList()}');
-      } else {
-        // ignore: avoid_print
-        print('Nenhum produto encontrado.');
-      }
-
-      // Atualiza o estado para refletir os produtos carregados.
-      setState(() {});
+      produtos = await ProdutoDAO().getProdutos();
+      setState(() {}); 
     } catch (e) {
-      // Exibe um erro no console se houver problemas ao carregar produtos.
-      // ignore: avoid_print
       print('Erro ao carregar produtos: $e');
     }
   }
@@ -47,21 +34,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _carregarCategorias() async {
     try {
       categorias = await CategoriaDAO().getCategorias();
-
-      // Verifique se as categorias foram carregadas
-      if (categorias.isNotEmpty) {
-        // ignore: avoid_print
-        print('Categorias carregadas: ${categorias.map((c) => c.nome).toList()}');
-      } else {
-        // ignore: avoid_print
-        print('Nenhuma categoria encontrada.');
-      }
-
-      // Atualiza o estado para refletir as categorias carregadas.
-      setState(() {});
+      setState(() {}); 
     } catch (e) {
-      // Exibe um erro no console se houver problemas ao carregar categorias.
-      // ignore: avoid_print
       print('Erro ao carregar categorias: $e');
     }
   }
@@ -69,14 +43,41 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _carregarCategorias(); // Carrega as categorias ao iniciar o widget.
-    _carregarProdutos(); // Carrega os produtos ao iniciar o widget.
+    _carregarCategorias();
+    _carregarProdutos();
   }
 
   void adicionarCarrinho(Produto produto) {
     setState(() {
       carrinho.add(produto);
     });
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CarrinhoScreen(carrinho: carrinho),
+          ),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CarrinhoScreen(carrinho: carrinho),
+          ),
+        );
+        break;
+    }
   }
 
   @override
@@ -86,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
         : produtos.where((produto) => produto.categoriaId == categoriaSelecionadaId).toList();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xfff6fcdf),
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
@@ -94,8 +95,9 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Colors.blueGrey,
+            color: Color(0xff1a1a19),
             fontStyle: FontStyle.italic,
+            backgroundColor: Color(0xfff6fcdf)
           ),
         ),
         actions: [
@@ -111,14 +113,13 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
         ],
-      ),
+      backgroundColor: Color(0xfff6fcdf),),
       body: Column(
         children: [
-          // Filtros de categoria, assegure-se de que as categorias estão carregadas.
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: categorias.isEmpty
-                ? const CircularProgressIndicator() // Mostra um carregando se as categorias não estiverem carregadas.
+                ? const CircularProgressIndicator()
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: categorias.map((categoria) {
@@ -128,23 +129,25 @@ class _HomeScreenState extends State<HomeScreen> {
                         onSelected: (selected) {
                           setState(() {
                             categoriaSelecionada = categoria.nome;
-                            categoriaSelecionadaId = categoria.id!; // Atualiza o ID da categoria selecionada.
+                            categoriaSelecionadaId = categoria.id!;
                           });
                         },
                       );
                     }).toList(),
                   ),
           ),
-          // Exibição dos produtos filtrados.
           Expanded(
-            child: ListView.builder(
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // 2 produtos por linha
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                childAspectRatio: 0.75, // Ajuste a proporção conforme necessário
+              ),
               itemCount: produtosFiltrados.length,
               itemBuilder: (context, index) {
                 var produto = produtosFiltrados[index];
-                return ListTile(
-                  title: Text(produto.nome),
-                  subtitle: Text(produto.descricao),
-                  trailing: Text('R\$ ${produto.preco.toStringAsFixed(2)}'),
+                return GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
@@ -157,11 +160,66 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   },
+                  child: Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Image.asset(
+                              produto.imagePath ?? 'assets/images/placeholder.png',
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            produto.nome,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff1a1a19),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            produto.descricao,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Color(0xff1a1a19),
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'R\$ ${produto.preco.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Color(0xff859f3d),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 );
               },
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBarWidget(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }

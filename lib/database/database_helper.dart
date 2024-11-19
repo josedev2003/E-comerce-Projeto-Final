@@ -17,57 +17,109 @@ class DatabaseHelper {
 
   Future<Database> _initDatabase() async {
     String path = join(await getDatabasesPath(), 'ecommerce.db');
+    print("Path do banco de dados: $path"); // Log do caminho do banco
     return await openDatabase(
       path,
-      version: 2, // Aumente a versão aqui
+      version: 33, // Atualize a versão sempre que mudar a estrutura
       onCreate: _onCreate,
-      onUpgrade: _onUpgrade, // Adicione este método para gerenciar a atualização
+      onUpgrade: _onUpgrade,
     );
   }
 
-  // Cria as tabelas no banco de dados
+  // Criação das tabelas no banco de dados
   Future<void> _onCreate(Database db, int version) async {
-    await db.execute('''
-      CREATE TABLE categoria (
+    try {
+      await db.execute('''CREATE TABLE categoria (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT
-      );
-    ''');
+      );''');
 
-    await db.execute('''
-      CREATE TABLE produto (
+      await db.execute('''CREATE TABLE produto (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nome TEXT,
         descricao TEXT,
         preco REAL,
         categoria_id INTEGER,
+        image_path TEXT, 
         FOREIGN KEY(categoria_id) REFERENCES categoria(id)
-      );
-    ''');
+      );''');
 
-    // Insere dados iniciais
-    await db.insert('categoria', {'nome': 'Chuteiras'});
-    await db.insert('categoria', {'nome': 'Tênis de Futsal'});
-    await db.insert('categoria', {'nome': 'Acessórios'});
+      await db.execute('''CREATE TABLE cliente (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT,
+        cpf TEXT,
+        endereco TEXT,
+        email TEXT UNIQUE,
+        senha TEXT NOT NULL
+      );''');
 
-    await db.insert('produto', {'nome': 'Tênis Esportivo', 'descricao': 'Super tênis de corrida', 'preco': 150.00, 'categoria_id': 1});
-    await db.insert('produto', {'nome': 'Tênis Casual', 'descricao': 'Tênis confortável para o dia a dia', 'preco': 120.00, 'categoria_id': 2});
-    await db.insert('produto', {'nome': 'Bota de Aventura', 'descricao': 'Bota resistente para trilhas', 'preco': 300.00, 'categoria_id': 3});
+      await db.execute('''CREATE TABLE estoque (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        produto_id INTEGER,
+        quantidadeDisponivel INTEGER NOT NULL, 
+        FOREIGN KEY(produto_id) REFERENCES produto(id)
+      );''');
+
+      await _inserirDadosIniciais(db);
+      print("Tabelas criadas e dados iniciais inseridos.");
+    } catch (e) {
+      print('Erro ao criar tabelas: $e');
+    }
   }
 
-  // Método para atualizar o banco de dados
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    // Exclui tabelas existentes
-    await db.execute('DROP TABLE IF EXISTS produto');
-    await db.execute('DROP TABLE IF EXISTS categoria');
-    
-    // Cria as tabelas novamente
-    await _onCreate(db, newVersion);
+    try {
+      if (oldVersion < 33) {
+        // Exemplo de upgrade: Adicionando uma nova coluna
+        await db.execute('''ALTER TABLE produto ADD COLUMN nova_coluna TEXT''');
+        print("Banco atualizado para versão 33: Nova coluna adicionada.");
+      }
+    } catch (e) {
+      print('Erro ao atualizar o banco de dados: $e');
+    }
   }
 
-  // Método para excluir o banco de dados
-  Future<void> dropDatabase() async {
-    String path = join(await getDatabasesPath(), 'ecommerce.db');
-    await deleteDatabase(path); // Exclui o banco de dados
+  Future<void> _inserirDadosIniciais(Database db) async {
+    try {
+      // Inserir categorias apenas se não existirem
+      var categorias = await db.query('categoria');
+      if (categorias.isEmpty) {
+        await db.insert('categoria', {'nome': 'Chuteiras'});
+        await db.insert('categoria', {'nome': 'Tênis de Futsal'});
+        await db.insert('categoria', {'nome': 'Acessórios'});
+        print("Categorias inseridas com sucesso.");
+      } else {
+        print("Categorias já existem.");
+      }
+
+      // Inserir produtos apenas se não existirem
+      var produtos = await db.query('produto');
+      if (produtos.isEmpty) {
+        await db.insert('produto', {
+          'nome': 'Chuteira Nike Legend 9 Elite',
+          'descricao':
+              'Modelo premium, ideal para jogadores que buscam controle e precisão nos chutes.',
+          'preco': 950.00,
+          'categoria_id': 1,
+          'image_path': 'assets/images/Chuteira Nike Legend 9 Elite.png'
+        });
+        // Outros produtos podem ser inseridos aqui...
+        print("Produtos inseridos com sucesso.");
+      } else {
+        print("Produtos já existem.");
+      }
+
+      // Inserir estoques apenas se não existirem
+      var estoques = await db.query('estoque');
+      if (estoques.isEmpty) {
+        await db.insert('estoque', {'produto_id': 1, 'quantidadeDisponivel': 10});
+        // Outros estoques podem ser inseridos aqui...
+        print("Estoque inicial inserido com sucesso.");
+      } else {
+        print("Estoque já existe.");
+      }
+    } catch (e) {
+      print('Erro ao inserir dados iniciais: $e');
+    }
   }
 }

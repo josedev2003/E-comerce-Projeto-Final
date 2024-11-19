@@ -33,7 +33,7 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/images/  # Caminho da pasta onde estão suas imagens
+    - assets/images/ 
   fonts:
     - family: Mate SC
       fonts: 

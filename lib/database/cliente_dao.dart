@@ -1,26 +1,30 @@
-
-import 'database_helper.dart';
+import 'package:e_commerce/database/database_helper.dart';
 import '../models/cliente.dart';
 
 class ClienteDAO {
-  Future<int> insertCliente(Cliente cliente) async {
-    final db = await DatabaseHelper().db;
-    return await db.insert('cliente', cliente.toMap());
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
+
+  Future<void> insertCliente(Cliente cliente) async {
+    final db = await _databaseHelper.db;
+    await db.insert('cliente', cliente.toMap());
   }
 
-  Future<List<Cliente>> getClientes() async {
-    final db = await DatabaseHelper().db;
-    final List<Map<String, dynamic>> result = await db.query('cliente');
-    return result.map((map) => Cliente.fromMap(map)).toList();
-  }
+   Future<Cliente?> getClienteByEmail(String email) async {
+    try {
+      final db = await _databaseHelper.db;
+      final List<Map<String, dynamic>> maps = await db.query(
+        'cliente',
+        where: 'email = ?',
+        whereArgs: [email],
+      );
 
-  Future<int> updateCliente(Cliente cliente) async {
-    final db = await DatabaseHelper().db;
-    return await db.update('cliente', cliente.toMap(), where: 'id = ?', whereArgs: [cliente.id]);
-  }
-
-  Future<int> deleteCliente(int id) async {
-    final db = await DatabaseHelper().db;
-    return await db.delete('cliente', where: 'id = ?', whereArgs: [id]);
+      if (maps.isNotEmpty) {
+        return Cliente.fromMap(maps.first);
+      }
+      return null;
+    } catch (e) {
+      print('Erro ao buscar cliente: $e');
+      return null; // Retorna null ou lanço uma exceção personalizada
+    }
   }
 }
