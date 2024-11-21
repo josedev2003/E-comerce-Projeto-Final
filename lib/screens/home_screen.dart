@@ -1,6 +1,9 @@
 import 'package:e_commerce/components/buttom_navigation_bar.dart';
 import 'package:e_commerce/database/categoria_dao.dart';
+import 'package:e_commerce/database/cliente_dao.dart';
 import 'package:e_commerce/database/produto_dao.dart';
+import 'package:e_commerce/models/cliente.dart';
+import 'package:e_commerce/screens/cliente_screen.dart';
 import 'package:flutter/material.dart';
 import '../models/produto.dart';
 import '../models/categoria.dart';
@@ -53,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _onItemTapped(int index) {
+  Future<void> _onItemTapped(int index) async {
     setState(() {
       _selectedIndex = index;
     });
@@ -65,18 +68,29 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CarrinhoScreen(carrinho: carrinho),
+           builder: (context) => CarrinhoScreen(carrinho: carrinho)
           ),
         );
         break;
       case 2:
+      String emailDoCliente = ""; // Email correto
+      Cliente? cliente = await ClienteDAO().getClienteByEmail(emailDoCliente);
+
+      if (cliente != null) {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CarrinhoScreen(carrinho: carrinho),
+            builder: (context) => UserScreen(cliente: cliente),
           ),
         );
-        break;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Cliente não encontrado.'),
+          ),
+        );
+      }
+      break;
     }
   }
 

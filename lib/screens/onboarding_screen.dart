@@ -5,7 +5,6 @@ class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _OnboardingScreenState createState() => _OnboardingScreenState();
 }
 
@@ -15,16 +14,191 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _currentPage = 0;
 
   @override
-  void initState() {
-    super.initState();
-    //carregarCategorias();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Gradiente de fundo
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xfff6fcdf),
+                  Color(0xffd8f3b3),
+                ],
+              ),
+            ),
+          ),
+          // Conteúdo principal
+          PageView(
+            controller: _pageController,
+            onPageChanged: (index) {
+              setState(() {
+                _currentPage = index;
+              });
+            },
+            children: [
+              _buildPage(
+                image: 'assets/images/Chuteira Nike Legend 9 Elite.png',
+                title: 'O par perfeito para você!',
+                text:
+                    'Nossas chuteiras foram projetadas para proporcionar aderência, conforto e controle excepcionais. Eleve seu jogo e destaque-se em campo com estilo e performance!',
+              ),
+              _buildPage(
+                image: 'assets/images/Chuteira Nike Street Gato.png',
+                title: 'Futsal com estilo e conforto',
+                text:
+                    'Os nossos tênis de futsal oferecem a combinação ideal de leveza e tração, permitindo que você se mova rapidamente e com agilidade em quadra. Prepare-se para dominar a partida!',
+              ),
+              _buildPage(
+                image: 'assets/images/Bolsa Nike Academy Team.png',
+                title: 'Complete seu kit com qualidade',
+                text:
+                    'Nossos acessórios de futebol foram escolhidos para garantir que você esteja sempre preparado em campo. Mostre seu amor pelo futebol e jogue com confiança e segurança!',
+              ),
+            ],
+          ),
+          // Indicadores e botões
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildIndicators(),
+                  const SizedBox(height: 10),
+                  _buildNavigationButtons(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPage({
+    required String image,
+    required String title,
+    required String text,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/images/Logo.png',
+            height: 100,
+            fit: BoxFit.contain,
+          ),
+          const SizedBox(height: 30),
+          Image.asset(
+            image,
+            height: 200,
+            fit: BoxFit.cover,
+          ),
+          const SizedBox(height: 30),
+          Text(
+            title,
+            style: const TextStyle(
+              fontFamily: "Prata",
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: Color(0xff1a1a19),
+              shadows: [
+                Shadow(
+                  offset: Offset(0, 2),
+                  blurRadius: 4,
+                  color: Colors.black26,
+                ),
+              ],
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 15),
+          Text(
+            text,
+            style: const TextStyle(
+              fontFamily: "Prata",
+              fontSize: 16,
+              color: Color(0xff1a1a19),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIndicators() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(3, (index) {
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          margin: const EdgeInsets.symmetric(horizontal: 5),
+          width: _currentPage == index ? 12 : 8,
+          height: _currentPage == index ? 12 : 8,
+          decoration: BoxDecoration(
+            color: _currentPage == index
+                ? const Color(0xff1a1a19)
+                : const Color(0xffd8f3b3),
+            shape: BoxShape.circle,
+            boxShadow: [
+              if (_currentPage == index)
+                const BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildNavigationButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildButton("Retornar", onTap: _prevPage),
+        _buildButton("Pular", onTap: _initialPage),
+        _buildButton("Avançar", onTap: _nextPage),
+      ],
+    );
+  }
+
+  Widget _buildButton(String text, {required VoidCallback onTap}) {
+    return ElevatedButton(
+      onPressed: onTap,
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        backgroundColor: const Color(0xff1a1a19),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
   }
 
   void _nextPage() {
     if (_currentPage < 2) {
       _pageController.nextPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.bounceInOut,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
       );
     } else {
       Navigator.push(
@@ -37,125 +211,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void _prevPage() {
     _pageController.previousPage(
-        duration: Duration(milliseconds: 300), curve: Curves.decelerate);
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   void _initialPage() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => HomeScreen(categorias: categorias),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentPage = index;
-          });
-        },
-        children: [
-          _buildPage(
-            image: 'assets/images/chuteira.png',
-            title: 'O par perfeito para você!',
-            text:
-                'Nossas chuteiras foram projetadas para proporcionar aderência, conforto e controle excepcionais. Eleve seu jogo e destaque-se em campo com estilo e performance!',
-          ),
-          _buildPage(
-            image: 'assets/images/tenis-futsal.png',
-            title: 'Futsal com estilo e conforto',
-            text:
-                'Os nossos tênis de futsal oferecem a combinação ideal de leveza e tração, permitindo que você se mova rapidamente e com agilidade em quadra. Prepare-se para dominar a partida!',
-          ),
-          _buildPage(
-            image: 'assets/images/Nike_Caneleira.png',
-            title: 'Complete seu kit com qualidade',
-            text:
-                'Nossos acessórios de futebol foram escolhidos para garantir que você esteja sempre preparado em campo. Mostre seu amor pelo futebol e jogue com confiança e segurança!',
-          ),
-        ],
-      ),
-      bottomNavigationBar: Container(
-        color: Color(0xfff6fcdf),
-        padding: EdgeInsets.all(0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            TextButton(
-              onPressed: _prevPage,
-              child: Text('Retornar', style: TextStyle(color: Color(0xff1a1a19)),),
-            ),
-            TextButton(
-              onPressed: _initialPage,
-              child: Text("Pular",  style: TextStyle(color: Color(0xff1a1a19))),
-            ),
-            TextButton(
-              onPressed: _nextPage,
-              child: Text("Avançar",  style: TextStyle(color: Color(0xff1a1a19))),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPage({
-    required String image,
-    required String title,
-    required String text,
-  }) {
-    return Container(
-      color: Color(0xfff6fcdf),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // Logo no topo
-            Image.asset(
-              'assets/images/Logo.png', // Caminho para sua logo
-              height: 100,
-              fit: BoxFit.contain,
-            ),
-            SizedBox(height: 0), // Espaço entre a logo e o nome
-            SizedBox(height: 20), // Espaço entre o nome e a imagem do produto
-            Image.asset(
-              image,
-              height: 200,
-              fit: BoxFit.cover,
-            ),
-            SizedBox(height: 20),
-            Text(
-              title,
-              style: TextStyle(
-                fontFamily: "Prata",
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xff1a1a19),
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontFamily: "Prata",
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal,
-                  color: Color(0xff1a1a19),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
-      ),
+          builder: (context) => HomeScreen(categorias: categorias)),
     );
   }
 }
