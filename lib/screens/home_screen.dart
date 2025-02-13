@@ -217,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             'R\$ ${produto.preco.toStringAsFixed(2)}',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black,
+                              color: Color(0xff859f3d),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
