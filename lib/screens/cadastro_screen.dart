@@ -63,7 +63,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  "Preencha os campos abaixo para começar sua jornada!",
+                  "Preencha os campos abaixo para começar sua experiência!",
                   style: TextStyle(
                     fontFamily: "Prata",
                     fontSize: 14,
@@ -82,7 +82,8 @@ class _CadastroScreenState extends State<CadastroScreen> {
                         label: 'Nome',
                         onChanged: (value) => _nome = value,
                         validator: (value) {
-                          if (value!.isEmpty) return 'Por favor, insira seu nome.';
+                          if (value!.isEmpty)
+                            return 'Por favor, insira seu nome.';
                           if (!RegExp(r'^[a-zA-ZÀ-ÿ\s]+$').hasMatch(value)) {
                             return 'O nome deve conter apenas letras.';
                           }
@@ -97,8 +98,10 @@ class _CadastroScreenState extends State<CadastroScreen> {
                           _CpfInputFormatter(), // Custom formatter para CPF
                         ],
                         validator: (value) {
-                          if (value!.isEmpty) return 'Por favor, insira seu CPF.';
-                          if (value.length != 14) return 'CPF deve ter 11 dígitos.';
+                          if (value!.isEmpty)
+                            return 'Por favor, insira seu CPF.';
+                          if (value.length != 14)
+                            return 'CPF deve ter 11 dígitos.';
                           return null;
                         },
                       ),
@@ -106,7 +109,9 @@ class _CadastroScreenState extends State<CadastroScreen> {
                         label: 'Endereço',
                         onChanged: (value) => _endereco = value,
                         validator: (value) {
-                          if (value!.isEmpty) return 'Por favor, insira seu endereço.';
+                          if (value!.isEmpty) {
+                            return 'Por favor, insira seu endereço.';
+                          }
                           return null;
                         },
                       ),
@@ -114,8 +119,11 @@ class _CadastroScreenState extends State<CadastroScreen> {
                         label: 'Email',
                         onChanged: (value) => _email = value,
                         validator: (value) {
-                          if (value!.isEmpty) return 'Por favor, insira seu email.';
-                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                          if (value!.isEmpty) {
+                            return 'Por favor, insira seu email.';
+                          }
+                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                              .hasMatch(value)) {
                             return 'Email inválido.';
                           }
                           return null;
@@ -127,7 +135,9 @@ class _CadastroScreenState extends State<CadastroScreen> {
                         obscureText: !_senhaVisivel,
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _senhaVisivel ? Icons.visibility : Icons.visibility_off,
+                            _senhaVisivel
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                           ),
                           onPressed: () {
                             setState(() {
@@ -136,8 +146,12 @@ class _CadastroScreenState extends State<CadastroScreen> {
                           },
                         ),
                         validator: (value) {
-                          if (value!.isEmpty) return 'Por favor, insira sua senha.';
-                          if (value.length < 6) return 'A senha deve ter pelo menos 6 caracteres.';
+                          if (value!.isEmpty) {
+                            return 'Por favor, insira sua senha.';
+                          }
+                          if (value.length < 6) {
+                            return 'A senha deve ter pelo menos 6 caracteres.';
+                          }
                           return null;
                         },
                       ),
@@ -150,7 +164,8 @@ class _CadastroScreenState extends State<CadastroScreen> {
                 ElevatedButton(
                   onPressed: _cadastrar,
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white, backgroundColor: Color(0xff1a1a19),
+                    foregroundColor: Colors.white,
+                    backgroundColor: Color(0xff1a1a19),
                     padding: EdgeInsets.symmetric(vertical: 14, horizontal: 32),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
