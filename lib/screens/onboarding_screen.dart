@@ -44,19 +44,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 image: 'assets/images/Chuteira Nike Legend 9 Elite.png',
                 title: 'O par perfeito para você!',
                 text:
-                    'Nossas chuteiras foram projetadas para proporcionar aderência, conforto e controle excepcionais. Eleve seu jogo e destaque-se em campo com estilo e performance!',
+                    'Nossas chuteiras foram desenvolvidas para oferecer tração, conforto e precisão incomparáveis. Aprimore seu desempenho e brilhe no campo com elegância e alta performance!',
               ),
               _buildPage(
                 image: 'assets/images/Chuteira Nike Street Gato.png',
                 title: 'Futsal com estilo e conforto',
                 text:
-                    'Os nossos tênis de futsal oferecem a combinação ideal de leveza e tração, permitindo que você se mova rapidamente e com agilidade em quadra. Prepare-se para dominar a partida!',
+                    'Nossos tênis de futsal unem leveza e aderência na medida certa, garantindo movimentos rápidos e ágeis em quadra. Esteja pronto para comandar o jogo!',
               ),
               _buildPage(
                 image: 'assets/images/Bolsa Nike Academy Team.png',
                 title: 'Complete seu kit com qualidade',
                 text:
-                    'Nossos acessórios de futebol foram escolhidos para garantir que você esteja sempre preparado em campo. Mostre seu amor pelo futebol e jogue com confiança e segurança!',
+                    'Selecionamos nossos acessórios de futebol para que você esteja sempre pronto para o jogo. Demonstre sua paixão pelo esporte e entre em campo com segurança e confiança!',
               ),
             ],
           ),
@@ -166,7 +166,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildButton("Retornar", onTap: _prevPage),
+        _buildButton("Voltar", onTap: _prevPage),
         _buildButton("Pular", onTap: _initialPage),
         _buildButton("Avançar", onTap: _nextPage),
       ],

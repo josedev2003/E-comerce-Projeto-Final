@@ -4,8 +4,10 @@ import 'package:e_commerce/models/produto.dart'; // Importa a classe Produto.
 
 class CarrinhoDeCompras {
   int id; // Identificador único para o carrinho.
-  Cliente cliente; // Objeto que contém as informações do cliente associado ao carrinho.
-  List<ItemCarrinho> itens; // Lista de itens (produtos e suas quantidades) no carrinho.
+  Cliente
+      cliente; // Objeto que contém as informações do cliente associado ao carrinho.
+  List<ItemCarrinho>
+      itens; // Lista de itens (produtos e suas quantidades) no carrinho.
   double total; // Total do valor dos produtos no carrinho.
 
   // Construtor que inicializa o carrinho com um ID, cliente e lista de itens.
@@ -41,7 +43,9 @@ class CarrinhoDeCompras {
     return {
       'id': id,
       'cliente': cliente.toMap(), // Convertendo o cliente para um Map.
-      'itens': itens.map((item) => item.toMap()).toList(), // Convertendo a lista de itens para Map.
+      'itens': itens
+          .map((item) => item.toMap())
+          .toList(), // Convertendo a lista de itens para Map.
       'total': total,
     };
   }
@@ -50,9 +54,11 @@ class CarrinhoDeCompras {
   factory CarrinhoDeCompras.fromMap(Map<String, dynamic> map) {
     return CarrinhoDeCompras(
       id: map['id'],
-      cliente: Cliente.fromMap(map['cliente']), // Reconstruindo o objeto Cliente.
-      itens: List<ItemCarrinho>.from(
-          map['itens'].map((itemMap) => ItemCarrinho.fromMap(itemMap))), // Convertendo cada item do Map para ItemCarrinho.
+      cliente:
+          Cliente.fromMap(map['cliente']), // Reconstruindo o objeto Cliente.
+      itens: List<ItemCarrinho>.from(map['itens'].map((itemMap) =>
+          ItemCarrinho.fromMap(
+              itemMap))), // Convertendo cada item do Map para ItemCarrinho.
       total: map['total'],
     );
   }
