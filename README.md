@@ -1,16 +1,31 @@
-# e_commerce
+# ⚽ KickStart - Sua Loja de Chuteiras Inteligente 🚀
 
-A new Flutter project.
+**O aplicativo definitivo para apaixonados por futsal e futebol!**  
+*Desenvolvido com Flutter & Dart para dispositivos móveis*
 
-## Getting Started
+[![Dart](https://img.shields.io/badge/Dart-2.17-%230175C2?logo=dart)](https://dart.dev)
+[![Flutter](https://img.shields.io/badge/Flutter-3.7-%2325D6FA?logo=flutter)](https://flutter.dev)
+[![GitHub Stars](https://img.shields.io/github/stars/seuuser/seurepositorio?style=social)](https://github.com/seuuser/seurepositorio)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/seuuser/seurepositorio/build.yml?branch=main)](https://github.com/seuuser/seurepositorio/actions)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-This project is a starting point for a Flutter application.
+![Banner KickStart](https://via.placeholder.com/800x200.png?text=KickStart+Banner+Showcase)
 
-A few resources to get you started if this is your first Flutter project:
+## 📱 Sobre o Projeto
+**KickStart** nasceu como projeto acadêmico da disciplina **Desenvolvimento de Aplicativos para Dispositivos Móveis** (4º período - UTFOR), mas ganhou vida como uma solução completa para entusiastas do esporte que buscam:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- 🛒 Loja virtual especializada em chuteiras
+- 🔐 Sistema de autenticação seguro
+- 🏷️ Catálogo organizado por categorias
+- 🛍️ Experiência de compra intuitiva
+- 📦 Gestão inteligente de carrinho
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Destaques:**
+```dart
+void main() {
+  runApp(
+    MaterialApp(
+      home: SoccerHeaven(), // Seu portal para o universo do futebol!
+    ),
+  );
+}
